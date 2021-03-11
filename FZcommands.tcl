@@ -1,8 +1,8 @@
-#############################[ FZ COMMANDS 3.1 ]#############################
+#############################[ FZ COMMANDS 3.2 ]#############################
 #                                                                           #
 # Author  : Opposing (Fz@nexushells.net) - #nexushells @ DALnet             #
 # Version : 3.2                                                             #
-# Released: March 09, 2021                                                  #
+# Released: March 11, 2021                                                  #
 # Source  : http://hub.nexushells.net/~Fz/index.htm                         #
 ##                                                                          #
 # Description: Allows masters/owners to control the bot via public/msg      #
@@ -859,7 +859,7 @@ proc fz:pubcom {nick uhost hand chan arg} {
      puthelp "NOTICE $nick :$fzcom(logo): SYNTAX: $fzcom(trigger)owner <add/del> <nick>."
      return 0
     }
-    if {[isbotnick [lindex [split $arg ] 2]]} {
+    if {[isbotnick [lindex [split $arg ] 2 ]]} {
      puthelp "NOTICE $nick :$fzcom(logo): You can't add/del me from owners."
      return 0
     }
@@ -986,30 +986,38 @@ proc fz:pubcom {nick uhost hand chan arg} {
   "join" {
    if {![check:auth $nick $hand]} {return 0}
    if {![matchattr $hand n|n $chan]} {
-    puthelp "NOTICE $nick :$fzcom(logo): You do not have access to use this command."
-    return 0
+   	puthelp "NOTICE $nick :$fzcom(logo): You do not have access to use this command."
+   	return 0
    }
-   if {![validchan $chan]} {
+   set jchan [lindex [split $text] 1 ]
+   if {![validchan $jchan]} {
+   if {[lindex [split $arg] 1] == ""} {
     channel add $chan
-    puthelp "NOTICE $nick :$fzcom(logo): Added $chan to my chanlist."
+  } else {
+  	channel add $jchan
+  }
+    puthelp "NOTICE $nick :$fzcom(logo): Added $jchan to my chanlist."
    } else {
-    puthelp "NOTICE $nick :$fzcom(logo): $chan is an invalid channel."
+    puthelp "NOTICR $nick :$fzcom(logo): $jchan is an invalid channel."
    }
-   return 0
   }
   "part" {
    if {![check:auth $nick $hand]} {return 0}
    if {![matchattr $hand n|n $chan]} {
-    puthelp "NOTICE $nick :$fzcom(logo): You do not have access to use this command."
-    return 0
+   	puthelp "NOTICE $nick :$fzcom(logo): You do not have access to use this command."
+   	return 0
    }
-   if {[validchan $chan]} {
+   set jchan [lindex [split $text] 1 ]
+   if {[validchan $jchan]} {
+   if {[lindex [split $arg] 1] == ""} {
     channel remove $chan
-    puthelp "NOTICE $nick :$fzcom(logo): Removed $chan from my chanlist."
+  } else {
+  	channel remove $jchan
+  }
+    puthelp "NOTICE $nick :$fzcom(logo): Removed $jchan from my chanlist."
    } else {
-    puthelp "NOTICE $nick :$fzcom(logo): $chan is an invalid channel."
+    puthelp "NOTICR $nick :$fzcom(logo): $jchan is an invalid channel."
    }
-   return 0
   }
   "access" {
    if {![check:auth $nick $hand]} {return 0}
@@ -1462,18 +1470,18 @@ proc fz:msgcom {nick uhost hand arg} {
    }
    return 0
   }
- "part" {
+  "part" {
    if {![matchattr $hand n]} {
     puthelp "NOTICE $nick :$fzcom(logo): You don't have enough access to use this command."
     return 0
    }
    if {[string first # [set c [lindex [split $arg] 1]]] == 0} {
-    if {![validchan $c]} {
+    if {[validchan $c]} {
      channel remove $c
      puthelp "NOTICE $nick :$fzcom(logo): Parted $c."
      putcmdlog "$fzcom(logo): <<$nick>> !$hand! $arg"
     } else {
-     puthelp "NOTICE $nick :$fzcom(logo): $c is already in my chanfile."
+     puthelp "NOTICE $nick :$fzcom(logo): $c is not in my chanfile."
     }
    } else {
     if {$c == ""} { 
@@ -1671,3 +1679,4 @@ proc wordwrap {str {len 100} {splitChr { }}} {
 }
 
 putlog "FzCommands.tcl v3.1 by Opposing Loaded..."
+
