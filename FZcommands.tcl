@@ -989,7 +989,7 @@ proc fz:pubcom {nick uhost hand chan arg} {
    	puthelp "NOTICE $nick :$fzcom(logo): You do not have access to use this command."
    	return 0
    }
-   set jchan [lindex [split $text] 1 ]
+   set jchan [lindex [split $arg] 1 ]
    if {![validchan $jchan]} {
    if {[lindex [split $arg] 1] == ""} {
     channel add $chan
@@ -1007,7 +1007,7 @@ proc fz:pubcom {nick uhost hand chan arg} {
    	puthelp "NOTICE $nick :$fzcom(logo): You do not have access to use this command."
    	return 0
    }
-   set jchan [lindex [split $text] 1 ]
+   set jchan [lindex [split $arg] 1 ]
    if {[validchan $jchan]} {
    if {[lindex [split $arg] 1] == ""} {
     channel remove $chan
